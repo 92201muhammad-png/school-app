@@ -1,70 +1,159 @@
-<!-- سٹوڈنٹ رجسٹریشن فارم -->
-<div style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; font-family: Jameel Noori Nastaleeq, sans-serif;">
-    <h3>نیا طالب علم شامل کریں</h3>
-    
-    <label>طالب علم کا نام:</label><br>
-    <input type="text" id="studentName" placeholder="نام درج کریں" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اسکول مینجمنٹ سسٹم</title>
+    <style>
+        body {
+            font-family: 'Jameel Noori Nastaleeq', Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
 
-    <label>ولدیت (والد کا نام):</label><br>
-    <input type="text" id="studentFather" placeholder="ولدیت درج کریں" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br>
+    <!-- لاگ ان سیکشن -->
+    <div id="loginSection" class="container">
+        <h2 style="text-align: center; color: #333;">اسکول ایپ لاگ ان</h2>
+        <label>یوزر نیم:</label>
+        <input type="text" id="username" placeholder="یوزر نیم درج کریں">
 
-    <label>کلاس:</label><br>
-    <input type="text" id="studentClass" placeholder="کلاس درج کریں" style="width: 100%; padding: 8px; margin-bottom: 15px;"><br>
+        <label>پاسورڈ:</label>
+        <input type="password" id="password" placeholder="پاسورڈ درج کریں">
 
-    <button onclick="addStudent()" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;">محفوظ کریں</button>
-</div>
+        <button onclick="checkLogin()">لاگ ان کریں</button>
+        <p id="errorMsg" style="color: red; text-align: center; margin-top: 10px;"></p>
+    </div>
 
-<!-- سٹوڈنٹس کی لسٹ -->
-<div style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
-    <h3>رجستر شدہ سٹوڈنٹس کی فہرست</h3>
-    <ul id="studentList" style="padding-right: 20px;">
-        <!-- یہاں سٹوڈنٹس شو ہوں گے -->
-    </ul>
-</div>
+    <!-- ڈیش بورڈ (ریکॉर्ड فارم اور لسٹ) - جو لاگ ان کے بعد نظر آئے گا -->
+    <div id="dashboardSection" class="container hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>نیا طالب علم شامل کریں</h2>
+            <button onclick="logout()" style="width: auto; background-color: #dc3545; padding: 5px 10px; font-size: 14px;">لاگ آؤٹ</button>
+        </div>
+        
+        <label>طالب علم کا نام:</label>
+        <input type="text" id="studentName" placeholder="نام درج کریں">
 
-<script>
-    // جب صفحہ لوڈ ہو تو پہلے سے محفوظ ڈیٹا دکھائیں
-    window.onload = function() {
-        displayStudents();
-    }
+        <label>ولدیت (والد کا نام):</label>
+        <input type="text" id="studentFather" placeholder="ولدیت درج کریں">
 
-    function addStudent() {
-        let name = document.getElementById("studentName").value;
-        let father = document.getElementById("studentFather").value;
-        let studentClass = document.getElementById("studentClass").value;
+        <label>کلاس:</label>
+        <input type="text" id="studentClass" placeholder="کلاس درج کریں">
 
-        if(name === "" || father === "") {
-            alert("براہ کرم نام اور ولدیت دونوں درج کریں!");
-            return;
+        <button onclick="addStudent()">محفوظ کریں</button>
+
+        <h3 style="margin-top: 30px;">رجستر شدہ سٹوڈنٹس کی فہرست</h3>
+        <ul id="studentList" style="padding-right: 20px;">
+            <!-- یہاں سٹوڈنٹس شو ہوں گے -->
+        </ul>
+    </div>
+
+    <script>
+        // جب پیج لوڈ ہو تو چیک کریں کہ کیا پہلے سے لاگ ان ہیں؟
+        window.onload = function() {
+            if(localStorage.getItem("isLoggedIn") === "true") {
+                showDashboard();
+            }
         }
 
-        let studentObj = { name: name, father: father, class: studentClass };
+        function checkLogin() {
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
 
-        // پرانا ڈیٹا حاصل کریں یا نئی لسٹ بنائیں
-        let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
-        students.push(studentObj);
+            // یہاں آپ اپنا مرضی کا یوزر نیم اور پاسورڈ رکھ سکتے ہیں (فی الحال admin / 1234 رکھا ہے)
+            if(user === "admin" && pass === "1234") {
+                localStorage.setItem("isLoggedIn", "true");
+                showDashboard();
+            } else {
+                document.getElementById("errorMsg").innerText = "غلط یوزر نیم یا پاسورڈ!";
+            }
+        }
 
-        // براؤزر میں محفوظ کریں
-        localStorage.setItem("schoolStudents", JSON.stringify(students));
+        function showDashboard() {
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("dashboardSection").classList.remove("hidden");
+            displayStudents();
+        }
 
-        // فیلڈز صاف کریں
-        document.getElementById("studentName").value = "";
-        document.getElementById("studentFather").value = "";
-        document.getElementById("studentClass").value = "";
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            document.getElementById("dashboardSection").classList.add("hidden");
+            document.getElementById("loginSection").classList.remove("hidden");
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+        }
 
-        displayStudents();
-    }
+        function addStudent() {
+            let name = document.getElementById("studentName").value;
+            let father = document.getElementById("studentFather").value;
+            let studentClass = document.getElementById("studentClass").value;
 
-    function displayStudents() {
-        let listContainer = document.getElementById("studentList");
-        listContainer.innerHTML = "";
-        
-        let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
+            if(name === "" || father === "") {
+                alert("براہ کرم نام اور ولدیت دونوں درج کریں!");
+                return;
+            }
 
-        students.forEach(function(student, index) {
-            let li = document.createElement("li");
-            li.innerHTML = `<strong>${student.name}</strong> - ولدیت: ${student.father} (کلاس: ${student.class})`;
-            listContainer.appendChild(li);
-        });
-    }
-</script>
+            let studentObj = { name: name, father: father, class: studentClass };
+
+            let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
+            students.push(studentObj);
+            localStorage.setItem("schoolStudents", JSON.stringify(students));
+
+            document.getElementById("studentName").value = "";
+            document.getElementById("studentFather").value = "";
+            document.getElementById("studentClass").value = "";
+
+            displayStudents();
+        }
+
+        function displayStudents() {
+            let listContainer = document.getElementById("studentList");
+            listContainer.innerHTML = "";
+            
+            let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
+
+            students.forEach(function(student) {
+                let li = document.createElement("li");
+                li.innerHTML = `<strong>${student.name}</strong> - ولدیت: ${student.father} (کلاس: ${student.class})`;
+                listContainer.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
