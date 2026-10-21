@@ -3,157 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اسکول مینجمنٹ سسٹم</title>
+    <title>اسکول اور کلاس مینجمنٹ سسٹم</title>
     <style>
         body {
-            font-family: 'Jameel Noori Nastaleeq', Arial, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 20px;
+            direction: rtl;
+            text-align: right;
         }
         .container {
             max-width: 500px;
             margin: 30px auto;
             background: white;
             padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        input {
+        h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        select, input, textarea {
             width: 100%;
             padding: 10px;
-            margin: 8px 0 15px 0;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 6px;
+            font-size: 15px;
             box-sizing: border-box;
         }
         button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
             width: 100%;
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
             font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #2980b9;
         }
         .hidden {
             display: none;
+        }
+        .dashboard-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-right: 4px solid #3498db;
+        }
+        .attendance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            margin-top: 15px;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
 
-    <!-- لاگ ان سیکشن -->
-    <div id="loginSection" class="container">
-        <h2 style="text-align: center; color: #333;">اسکول ایپ لاگ ان</h2>
-        <label>یوزر نیم:</label>
-        <input type="text" id="username" placeholder="یوزر نیم درج کریں">
-
-        <label>پاسورڈ:</label>
-        <input type="password" id="password" placeholder="پاسورڈ درج کریں">
-
-        <button onclick="checkLogin()">لاگ ان کریں</button>
-        <p id="errorMsg" style="color: red; text-align: center; margin-top: 10px;"></p>
-    </div>
-
-    <!-- ڈیش بورڈ (ریکॉर्ड فارم اور لسٹ) - جو لاگ ان کے بعد نظر آئے گا -->
-    <div id="dashboardSection" class="container hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>نیا طالب علم شامل کریں</h2>
-            <button onclick="logout()" style="width: auto; background-color: #dc3545; padding: 5px 10px; font-size: 14px;">لاگ آؤٹ</button>
-        </div>
+    <div class="container">
         
-        <label>طالب علم کا نام:</label>
-        <input type="text" id="studentName" placeholder="نام درج کریں">
+        <!-- 1. لاگ ان سیکشن -->
+        <div id="loginSection">
+            <h2>لاگ ان اسکرین</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="role">اپنا کردار منتخب کریں:</label>
+                    <select id="role" required>
+                        <option value="">-- منتخب کریں --</option>
+                        <option value="teacher">استاد (Teacher)</option>
+                        <option value="student">طالب علم / والدین (Student/Parent)</option>
+                    </select>
+                </div>
 
-        <label>ولدیت (والد کا نام):</label>
-        <input type="text" id="studentFather" placeholder="ولدیت درج کریں">
+                <div class="form-group">
+                    <label for="username">صارف کا نام (Username):</label>
+                    <input type="text" id="username" placeholder="اپنا نام درج کریں" required>
+                </div>
 
-        <label>کلاس:</label>
-        <input type="text" id="studentClass" placeholder="کلاس درج کریں">
+                <div class="form-group">
+                    <label for="password">پاس ورڈ (Password):</label>
+                    <input type="password" id="password" placeholder="پاس ورڈ درج کریں" required>
+                </div>
 
-        <button onclick="addStudent()">محفوظ کریں</button>
+                <button type="submit">لاگ ان کریں</button>
+            </form>
+        </div>
 
-        <h3 style="margin-top: 30px;">رجستر شدہ سٹوڈنٹس کی فہرست</h3>
-        <ul id="studentList" style="padding-right: 20px;">
-            <!-- یہاں سٹوڈنٹس شو ہوں گے -->
-        </ul>
+        <!-- 2. استاد کا ڈیش بورڈ -->
+        <div id="teacherDashboard" class="hidden">
+            <h2>استاد کا ڈیش بورڈ</h2>
+            <p id="teacherWelcome" style="text-align: center; color: #666;"></p>
+
+            <div class="dashboard-box">
+                <h3>📚 نیا ہوم ورک اپ لوڈ کریں</h3>
+                <div class="form-group">
+                    <label>عنوان:</label>
+                    <input type="text" id="hwTitle" placeholder="مثلاً: ریاضی ہوم ورک">
+                </div>
+                <div class="form-group">
+                    <label>تفصیل:</label>
+                    <textarea id="hwDesc" rows="2" placeholder="تفصیل یہاں لکھیں..."></textarea>
+                </div>
+                <button type="button" onclick="publishHomework()">ہوم ورک پبلش کریں</button>
+            </div>
+
+            <div class="dashboard-box">
+                <h3>📋 حاضری کا ریکارڈ لگائیں</h3>
+                <div class="attendance-row">
+                    <span>احمد علی</span>
+                    <select id="att1" style="width: 50%;">
+                        <option value="حاضر (Present)">حاضر (Present)</option>
+                        <option value="غیر حاضر - بیماری (Sick)">غیر حاضر - بیماری</option>
+                        <option value="غیر حاضر - ایمرجنسی (Emergency)">غیر حاضر - ایمرجنسی</option>
+                    </select>
+                </div>
+                <div class="attendance-row">
+                    <span>محمد عثمان</span>
+                    <select id="att2" style="width: 50%;">
+                        <option value="حاضر (Present)">حاضر (Present)</option>
+                        <option value="غیر حاضر - بیماری (Sick)">غیر حاضر - بیماری</option>
+                        <option value="غیر حاضر - ایمرجنسی (Emergency)">غیر حاضر - ایمرجنسی</option>
+                    </select>
+                </div>
+                <button type="button" onclick="saveAttendance()" style="background-color: #27ae60; margin-top: 10px;">حاضری محفوظ کریں</button>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">لاگ آؤٹ (باہر جائیں)</button>
+        </div>
+
+        <!-- 3. طالب علم / والدین کا پورٹل -->
+        <div id="studentDashboard" class="hidden">
+            <h2>طالب علم / والدین پورٹل</h2>
+            <p id="studentWelcome" style="text-align: center; color: #666;"></p>
+
+            <div class="dashboard-box">
+                <h3>📢 استاد کی طرف سے ہوم ورک</h3>
+                <p id="displayHomework" style="background: white; padding: 10px; border-radius: 5px;">کوئی نیا ہوم ورک موجود نہیں ہے۔</p>
+            </div>
+
+            <div class="dashboard-box">
+                <h3>📊 آپ کی حاضری کی صورتحال</h3>
+                <p id="displayAttendance" style="background: white; padding: 10px; border-radius: 5px;">حاضری کا ریکارڈ دستیاب نہیں۔</p>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">لاگ آؤٹ (باہر جائیں)</button>
+        </div>
+
     </div>
 
     <script>
-        // جب پیج لوڈ ہو تو چیک کریں کہ کیا پہلے سے لاگ ان ہیں؟
-        window.onload = function() {
-            if(localStorage.getItem("isLoggedIn") === "true") {
-                showDashboard();
+        // لاگ ان فارم کا فنکشن
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('role').value;
+            const username = document.getElementById('username').value;
+
+            document.getElementById('loginSection').classList.add('hidden');
+
+            if(role === 'teacher') {
+                document.getElementById('teacherDashboard').classList.remove('hidden');
+                document.getElementById('teacherWelcome').innerText = "خوش آمدید، استاد محترم: " + username;
+            } else if(role === 'student') {
+                document.getElementById('studentDashboard').classList.remove('hidden');
+                document.getElementById('studentWelcome').innerText = "خوش آمدید: " + username;
+                
+                // لوکل اسٹوریج سے ہوم ورک اور حاضری لوڈ کرنا
+                const savedHomework = localStorage.getItem('classHomework');
+                if(savedHomework) {
+                    document.getElementById('displayHomework').innerText = savedHomework;
+                }
+
+                const savedAttendance = localStorage.getItem('classAttendance');
+                if(savedAttendance) {
+                    document.getElementById('displayAttendance').innerHTML = savedAttendance;
+                }
             }
-        }
+        });
 
-        function checkLogin() {
-            let user = document.getElementById("username").value;
-            let pass = document.getElementById("password").value;
-
-            // یہاں آپ اپنا مرضی کا یوزر نیم اور پاسورڈ رکھ سکتے ہیں (فی الحال admin / 1234 رکھا ہے)
-            if(user === "admin" && pass === "1234") {
-                localStorage.setItem("isLoggedIn", "true");
-                showDashboard();
+        // استاد ہوم ورک پبلش کرے گا
+        function publishHomework() {
+            const title = document.getElementById('hwTitle').value;
+            const desc = document.getElementById('hwDesc').value;
+            if(title && desc) {
+                const homeworkText = "عنوان: " + title + "\nتفصیل: " + desc;
+                localStorage.setItem('classHomework', homeworkText);
+                alert('ہوم ورک کامیابی سے محفوظ اور پبلش کر دیا گیا ہے!');
+                document.getElementById('hwTitle').value = '';
+                document.getElementById('hwDesc').value = '';
             } else {
-                document.getElementById("errorMsg").innerText = "غلط یوزر نیم یا پاسورڈ!";
+                alert('براہ کرم عنوان اور تفصیل دونوں درج کریں۔');
             }
         }
 
-        function showDashboard() {
-            document.getElementById("loginSection").classList.add("hidden");
-            document.getElementById("dashboardSection").classList.remove("hidden");
-            displayStudents();
+        // استاد حاضری محفوظ کرے گا
+        function saveAttendance() {
+            const att1Status = document.getElementById('att1').value;
+            const att2Status = document.getElementById('att2').value;
+
+            const attendanceHtml = `
+                احمد علی: <strong>${att1Status}</strong><br>
+                محمد عثمان: <strong>${att2Status}</strong>
+            `;
+
+            localStorage.setItem('classAttendance', attendanceHtml);
+            alert('حاضری کامیابی سے محفوظ کر دی گئی ہے!');
         }
 
+        // لاگ آؤٹ کرنے کا فنکشن
         function logout() {
-            localStorage.removeItem("isLoggedIn");
-            document.getElementById("dashboardSection").classList.add("hidden");
-            document.getElementById("loginSection").classList.remove("hidden");
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
-        }
-
-        function addStudent() {
-            let name = document.getElementById("studentName").value;
-            let father = document.getElementById("studentFather").value;
-            let studentClass = document.getElementById("studentClass").value;
-
-            if(name === "" || father === "") {
-                alert("براہ کرم نام اور ولدیت دونوں درج کریں!");
-                return;
-            }
-
-            let studentObj = { name: name, father: father, class: studentClass };
-
-            let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
-            students.push(studentObj);
-            localStorage.setItem("schoolStudents", JSON.stringify(students));
-
-            document.getElementById("studentName").value = "";
-            document.getElementById("studentFather").value = "";
-            document.getElementById("studentClass").value = "";
-
-            displayStudents();
-        }
-
-        function displayStudents() {
-            let listContainer = document.getElementById("studentList");
-            listContainer.innerHTML = "";
-            
-            let students = JSON.parse(localStorage.getItem("schoolStudents")) || [];
-
-            students.forEach(function(student) {
-                let li = document.createElement("li");
-                li.innerHTML = `<strong>${student.name}</strong> - ولدیت: ${student.father} (کلاس: ${student.class})`;
-                listContainer.appendChild(li);
-            });
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
         }
     </script>
+
 </body>
 </html>
