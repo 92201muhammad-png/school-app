@@ -1,13 +1,12 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
-  "name": "92201muhammad-png.github",
-  "orientation": "any",
-  "scope": "/",
+{
+  "name": "School App",
   "short_name": "SchoolApp",
-  "start_url": "/",
-  "theme_color": "#ffffff",
   "id": "com.school.app",
-  "description": "This is a comprehensive school and class management application designed for teachers, students, and parents. It seamlessly handles daily classroom activities, including publishing and tracking homework assignments, managing student attendance records, and providing a dedicated portal for students and parents to stay updated with their academic progress."
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3498db",
+  "description": "This is a comprehensive school and class management application designed for teachers, students, and parents. It seamlessly handles daily classroom activities, including publishing homework assignments and tracking student attendance records."
+}
 }
